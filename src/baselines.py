@@ -50,10 +50,10 @@ class SimpleBaseline:
         """Trains the vectorizer classifier and indexes historical customer brand reply pairs"""
         clean_df = train_df.dropna(subset = [text_col, intent_col]).copy()
         self.train_texts = clean_df[text_col].tolist()
-        self.train_replies = clean_df[reply_col].tolist if reply_col in clean_df.columns else []
+        self.train_replies = clean_df[reply_col].tolist() if reply_col in clean_df.columns else []
 
         # Logistic Regression and Vectorizer Classifier
-        x = self.vectorizer.fit_transofmr(clean_df[text_col])
+        x = self.vectorizer.fit_transform(clean_df[text_col])
         y = clean_df[intent_col]
         self.classifier.fit(x, y)
 
