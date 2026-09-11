@@ -29,6 +29,3 @@ Thumbs.db
 .vscode/
 .idea/
 data/processed/amazon_help_pairs_sample_5k.csv
-
-*.csv
-*.json
