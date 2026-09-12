@@ -4,6 +4,8 @@ import ollama as llm
 from typing import Dict, Any, List
 from src.rag import HistoricalRetriever
 
+client = llm.Client(host = "http://192.168.0.28:11434")
+
 MODEL_NAME = 'llama3.1:8b'
 
 PROMPT_TEMPLATE = """
@@ -63,7 +65,7 @@ class SupportAgent():
     def triage(self, customer_tweet: str) -> Dict[str, Any]:
         prompt = PROMPT_TEMPLATE.format(customer_tweet = customer_tweet)
         try:
-            response = llm.chat(model = self.model_name, messages = [{'role': 'user', 'content': prompt}], format = 'json', options = {'temperature': 0.0})
+            response = client.chat(model = self.model_name, messages = [{'role': 'user', 'content': prompt}], format = 'json', options = {'temperature': 0.0})
             data = json.loads(response['message']['content'])
             return {
                 'predicted_intent': data.get('predicted_intent'),
@@ -82,7 +84,7 @@ class SupportAgent():
             history_text = "\n".join([f"- Example: {m['historical_reply']}" for m in context_matches])
             prompt = REPLY_GENERATION_PROMPT.format(customer_tweet = customer_tweet, intent = intent, historical_resolutions = history_text)
             try:
-                response = llm.chat(model = self.model_name, messages = [{'role': 'user', 'content': prompt}], options = {'temperature': 0.2})
+                response = client.chat(model = self.model_name, messages = [{'role': 'user', 'content': prompt}], options = {'temperature': 0.2})
                 clean_reply = re.sub(r"^(Here'?s a draft reply:?|Draft reply:?|Here is a draft:?)\s*", "", response['message']['content'], flags=re.IGNORECASE).strip().replace('"', '')
                 return clean_reply
             except Exception as e:

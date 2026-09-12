@@ -4,6 +4,8 @@ import json
 import ollama as llm
 from typing import Dict, Any, List
 
+client = llm.Client(host = 'http://192.168.0.28:11434')
+
 MODEL_NAME = 'llama3.1:8b'
 
 RUBRIC_PROMPT = """
@@ -61,7 +63,7 @@ class ReplyQualityJudge:
             reference_reply = reference_reply
         )
         try:
-            response = llm.chat(model = self.model_name, messages = [{'role': 'user', 'content': prompt}], format = 'json', options = {'temperature': 0.0})
+            response = client.chat(model = self.model_name, messages = [{'role': 'user', 'content': prompt}], format = 'json', options = {'temperature': 0.0})
             data = json.loads(response['message']['content'])
             return {
                 'policy_safety': safe_int(data.get('policy_safety')),
