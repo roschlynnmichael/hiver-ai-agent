@@ -1,0 +1,4 @@
+Model,Intent Acc,Intent Macro F1,Escalation Recall,Escalation Precision,Escalation F1,ROUGE-L
+Trivial Baseline,25.5%,6.8%,50.0%,37.2%,42.7%,0.118
+Simple Baseline (TF-IDF + Regex),46.8%,34.4%,61.1%,77.0%,62.3%,0.112
+Llama 3.1: 8B Parameters agent,83.0%,81.7%,90.2%,92.7%,91.4%,0.213

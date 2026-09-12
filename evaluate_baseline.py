@@ -5,6 +5,7 @@ import pandas as pd
 from rouge_score import rouge_scorer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.model_selection import train_test_split
+from src.agent import SupportAgent
 from src.baselines import TrivialBaseline, SimpleBaseline
 
 PROCESSED_PATH = "data/processed"
@@ -28,6 +29,8 @@ print(f"[*] Training on {len(df_train)} samples, Evaluating on {len(df_test)} un
 
 simple_model = SimpleBaseline()
 simple_model.fit(df_train, text_col = 'customer_tweet', intent_col = 'gold_intent', reply_col = 'reference_reply')
+
+support_agent = SupportAgent()
 
 scorer = rouge_scorer.RougeScorer(['rougeL'], use_stemmer = True)
 
@@ -66,12 +69,16 @@ def evaluate_model(model, df_eval, model_name = 'Model'):
 results = []
 results.append(evaluate_model(trivial_model, df_test, 'Trivial Baseline'))
 results.append(evaluate_model(simple_model, df_test, 'Simple Baseline (TF-IDF + Regex)'))
+results.append(evaluate_model(support_agent, df_test, "Llama 3.1: 8B Parameters agent"))
 
 
 df_results = pd.DataFrame(results)
 df_results = pd.DataFrame(results)
-print("\n" + "=" * 80)
-print("             HEADLINE BASELINE BENCHMARK RESULTS")
-print("=" * 80)
+print("\n" + "=" * 95)
+print("                    FINAL HEADLINE BENCHMARK COMPARISON TABLE")
+print("=" * 95)
 print(df_results.to_string(index=False))
-print("=" * 80)
+print("=" * 95)
+
+df_results.to_csv("data/processed/headline_results.csv", index=False)
+print("\n[✔] Results exported to 'data/processed/headline_results.csv'.")
